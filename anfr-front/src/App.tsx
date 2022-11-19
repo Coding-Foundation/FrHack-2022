@@ -4,6 +4,7 @@ import MainMap from "./components/Map";
 import NavBar from "./components/NavBar";
 
 function App() {
+
   return (
     <div className={"flex flex-col h-screen"}>
       <NavBar/>
