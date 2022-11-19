@@ -1,2 +1,0 @@
-Etat des réseaux télécoms à 200 mètres autour de la position de la sonde fixe.
-Voir éventuels nouveaux systèmes mis en service et arrêtés entre les trimestre => comparaison à faire entre le fichier T et T+1
