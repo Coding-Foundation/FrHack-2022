@@ -15,6 +15,8 @@ services:
 
   lab_frhack:
     image: marcpartensky/frhack-lab
+    ports:
+      - "8888:8888"
     build: .
     volumes:
       - ./clustering.ipynb:/home/lab/clustering.ipynb
