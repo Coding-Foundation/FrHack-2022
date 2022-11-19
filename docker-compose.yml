@@ -1,6 +1,6 @@
 version: "3.9"
 services:
-  postgres:
+  postgres_frhack:
     image: postgres:9.6-alpine
     ports:
       - "5433:5432"
@@ -11,7 +11,7 @@ services:
       POSTGRES_DB: db
       POSTGRES_PASSWORD: password
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - postgres_frhack:/var/lib/postgresql/data
 
   lab:
     image: marcpartensky/frhack-lab
@@ -41,9 +41,7 @@ services:
     image: sosedoff/pgweb
     restart: unless-stopped
     environment:
-      POSTGRES_USER: user
-      POSTGRES_DB: db
-      POSTGRES_PASSWORD: password
+      DATABASE_URL: postgres://user:password@postgres_frhack:5432/db?sslmode=disable
     networks:
       - postgres
       - caddy
@@ -60,7 +58,8 @@ services:
         # traefik.http.routers.pgweb.middlewares: ldap_auth
 
 volumes:
-  postgres:
+  postgres_frhack:
+
 networks:
   postgres:
   caddy:
