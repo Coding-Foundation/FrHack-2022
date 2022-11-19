@@ -13,7 +13,7 @@ services:
     volumes:
       - postgres_frhack:/var/lib/postgresql/data
 
-  lab:
+  lab_frhack:
     image: marcpartensky/frhack-lab
     build: .
     volumes:
@@ -22,21 +22,13 @@ services:
     networks:
       - caddy
       - postgres
-    labels:
-      caddy: lab.marcpartensky.com
-      caddy.reverse_proxy: "{{upstreams 8888}}"
-      traefik.enable: "true"
-      traefik.http.routers.lab.rule: Host(`lab.marcpartensky.com`)
-      traefik.http.routers.lab.entrypoints: websecure
-      traefik.http.routers.lab.tls.certresolver: tls
-      traefik.http.services.lab.loadbalancer.server.port: 8888
     deploy:
       labels:
         traefik.enable: "true"
-        traefik.http.routers.lab.rule: Host(`lab.marcpartensky.com`)
-        traefik.http.routers.lab.entrypoints: websecure
-        traefik.http.routers.lab.tls.certresolver: tls
-        traefik.http.services.lab.loadbalancer.server.port: 8888
+        traefik.http.routers.lab_frhack.rule: Host(`lab.frhack.marcpartensky.com`)
+        traefik.http.routers.lab_frhack.entrypoints: websecure
+        traefik.http.routers.lab_frhack.tls.certresolver: tls
+        traefik.http.services.lab_frhack.loadbalancer.server.port: 8888
 
   pgweb_frhack:
     image: sosedoff/pgweb
