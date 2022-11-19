@@ -18,6 +18,7 @@ class Transmitter(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     creation_date = Column(String, index=True)
+    ending_date = Column(String, index=True)
     system = Column(Integer, ForeignKey("system_telecom.id"))
     antenna = Column(Integer, ForeignKey("antenna.id"))
     captors = relationship("Captor", back_populates="transmitter")
