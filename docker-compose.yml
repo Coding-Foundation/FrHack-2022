@@ -14,7 +14,9 @@ services:
   lab:
     build: .
     volumes:
-      - ./clustering.ipynb:/home/lab
+      - ./clustering.ipynb:/home/lab/clustering.ipynb
+    networks:
+      - caddy
     labels:
       caddy: lab.marcpartensky.com
       caddy.reverse_proxy: "{{upstreams 8888}}"
@@ -34,3 +36,5 @@ services:
 
 volumes:
   postgres:
+networks:
+  caddy:
