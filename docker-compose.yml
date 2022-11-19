@@ -1,15 +1,75 @@
 version: "3.9"
 services:
-  postgres:
+  postgres_frhack:
     image: postgres:9.6-alpine
     ports:
       - "5433:5432"
+    networks:
+      - postgres
     environment:
       POSTGRES_USER: user
       POSTGRES_DB: db
       POSTGRES_PASSWORD: password
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - postgres_frhack:/var/lib/postgresql/data
+
+  lab_frhack:
+    image: marcpartensky/frhack-lab
+    build: .
+    volumes:
+      - ./clustering.ipynb:/home/lab/clustering.ipynb
+      - ./prep:/home/lab/prep
+    networks:
+      - caddy
+      - postgres
+    deploy:
+      labels:
+        traefik.enable: "true"
+        traefik.http.routers.lab_frhack.rule: Host(`lab.frhack.marcpartensky.com`)
+        traefik.http.routers.lab_frhack.entrypoints: websecure
+        traefik.http.routers.lab_frhack.tls.certresolver: tls
+        traefik.http.services.lab_frhack.loadbalancer.server.port: 8888
+
+  pgweb_frhack:
+    image: sosedoff/pgweb
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgres://user:password@postgres_frhack:5432/db?sslmode=disable
+    networks:
+      - postgres
+      - caddy
+    depends_on:
+      - postgres_frhack
+    deploy:
+      labels:
+        traefik.enable: "true"
+        traefik.http.routers.pgweb_frhack.rule: Host(`db.frhack.marcpartensky.com`)
+        traefik.http.routers.pgweb_frhack.entrypoints: websecure
+        traefik.http.routers.pgweb_frhack.tls.certresolver: tls
+        traefik.http.services.pgweb_frhack.loadbalancer.server.port: 8081
+        # ldapAuth Register Middleware ====================================================
+        # traefik.http.routers.pgweb.middlewares: ldap_auth
+
+  api_frhack:
+    image: marcpartensky/api-frhack
+    build: anfr-api
+    networks:
+      - postgres
+      - caddy
+    volumes:
+      - ./prep:/home/anfr/prep
+    deploy:
+      labels:
+        traefik.enable: "true"
+        traefik.http.routers.api_frhack.rule: Host(`api.frhack.marcpartensky.com`)
+        traefik.http.routers.api_frhack.entrypoints: websecure
+        traefik.http.routers.api_frhack.tls.certresolver: tls
+        traefik.http.services.api_frhack.loadbalancer.server.port: 80
 
 volumes:
+  postgres_frhack:
+
+networks:
   postgres:
+  caddy:
+    external: true
