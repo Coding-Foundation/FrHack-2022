@@ -10,6 +10,11 @@ services:
       POSTGRES_PASSWORD: password
     volumes:
       - postgres:/var/lib/postgresql/data
+  lab:
+    build: .
+    volumes:
+      - ./clustering.ipynb:/home/lab
+
 
 volumes:
   postgres:
