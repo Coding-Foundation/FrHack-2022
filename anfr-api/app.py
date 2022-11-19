@@ -2,18 +2,11 @@ from typing import Union
 from fastapi import FastAPI
 from database import SessionLocal
 from import_service import ImportService
-
-# Dependency
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+from models import *
 
 app = FastAPI()
 
-database = get_db()
+database = SessionLocal()
 
 importService = ImportService(database)
 
@@ -21,10 +14,23 @@ importService = ImportService(database)
 def read_root():
     return {"Hello": "World"}
 
-@app.get("/import")
-def importDB():
-    return importService.importAntenna()
+@app.get("/captors")
+def getCaptors():
+    #Récupérer tous les capteurs, y ajouter aussi leurs profil type
+    return database.query(Captor).all()
 
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
+@app.get("/captors/{id}")
+def getCaptorsResults(id: int):
+    #Récupérer les informations du capteur ainsi que les résultats
+    return database.query(Captor).get(id)
+
+@app.get("/antennas")
+def getAntennas():
+    #Récupérer toutes les antennes
+    return database.query(Antenna).all()
+
+
+@app.get("/antennas/{id}")
+def getAntennas(id: int):
+    #Récupérer toutes les antennes
+    return database.query(Antenna).get(id)

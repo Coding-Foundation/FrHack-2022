@@ -1,6 +1,6 @@
 from sqlalchemy import Float, Column, ForeignKey, Date, Integer, String
 from sqlalchemy.orm import relationship
-from .database import Base
+from database import Base
 
 
 class SystemTelecom(Base):
