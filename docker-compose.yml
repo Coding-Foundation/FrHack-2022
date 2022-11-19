@@ -16,6 +16,7 @@ services:
     build: .
     volumes:
       - ./clustering.ipynb:/home/lab/clustering.ipynb
+      - ./prep:/home/lab/prep
     networks:
       - caddy
     labels:
