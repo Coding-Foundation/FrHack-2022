@@ -40,7 +40,7 @@ class Dataset:
                 res = []
                 for x in xrange:
                     datetime_ = datetime(2020, 1, 1) + x * timedelta(hours=2)
-                    dt.append(dt)
+                    dt.append(datetime_)
                     mean = self.measure_df[(self.measure_df["numero"]==sonde) & (self.measure_df["weekday"]==datetime_.weekday()) & ((self.measure_df["hour"]==datetime_.hour) | (self.measure_df["hour"]==datetime_.hour+1))]["E_volt_par_metre"].mean() 
                     if math.isnan(mean):
                         length_ = ((self.measure_df["numero"]==sonde) & (self.measure_df["weekday"]==datetime_.weekday()) & ((self.measure_df["hour"]==datetime_.hour) | (self.measure_df["hour"]==datetime_.hour+1))).sum()
@@ -66,6 +66,37 @@ class Dataset:
             else:
                 res = db[key_cache]
         return res
+    
+    def sonde_week_derive(self, sonde:str):
+        key_cache = f"sonde_{sonde}"
+        assert (self.measure_df["numero"]==sonde).sum(), f"la sonde {sonde} n'existe pas"
+        with shelve.open('icache-derive') as db:
+            if key_cache not in db:
+                xrange = tuple(range(7 * 12))
+                dt = []
+                res = []
+                for x in xrange:
+                    datetime_1 = datetime(2020, 1, 1) + (x-1) * timedelta(hours=2)
+                    datetime_2 = datetime(2020, 1, 1) + x * timedelta(hours=2)
+                    dt.append(datetime_2)
+                    vec1 = self.measure_df[(self.measure_df["numero"]==sonde) & (self.measure_df["weekday"]==datetime_1.weekday()) & ((self.measure_df["hour"]==datetime_1.hour) | (self.measure_df["hour"]==datetime_1.hour+1))]["E_volt_par_metre"]
+                    
+                    vec2 = self.measure_df[(self.measure_df["numero"]==sonde) & (self.measure_df["weekday"]==datetime_2.weekday()) & ((self.measure_df["hour"]==datetime_2.hour) | (self.measure_df["hour"]==datetime_2.hour+1))]["E_volt_par_metre"]
+                    
+                    diff = vec2 - vec1
+                    print("diff ", diff)
+                    mean = diff.mean()
+                    
+                    if math.isnan(mean):
+                        length_ = ((self.measure_df["numero"]==sonde) & (self.measure_df["weekday"]==datetime_2.weekday()) & ((self.measure_df["hour"]==datetime_2.hour) | (self.measure_df["hour"]==datetime_2.hour+1))).sum()
+                        print(f"pb pour sonde {sonde}, avec datetiems {repr(datetime_2)}, x: {x}, weekday : {datetime_2.weekday()}, hour : {datetime_2.hour}, len : {length_}")
+                        #Path("./debug").write_text(repr(tuple(self.measure_df[(self.measure_df["numero"]==sonde) & (self.measure_df["weekday"]==datetime_.weekday()) & ((self.measure_df["hour"]==datetime_.hour) | (self.measure_df["hour"]==datetime_.hour+1))]["E_volt_par_metre"])))
+                    res.append(mean)
+                db[key_cache] = dt, res
+            else:
+                dt, res = db[key_cache]
+        return dt, res
+    
     
 path_data = Path(f"./")
 network_state_path = path_data / f"Etats reseaux telecoms"
