@@ -46,7 +46,7 @@ services:
       - postgres
       - caddy
     depends_on:
-      - postgres
+      - postgres_frhack
     deploy:
       labels:
         traefik.enable: "true"
