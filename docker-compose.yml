@@ -8,3 +8,8 @@ services:
       POSTGRES_USER: user
       POSTGRES_DB: db
       POSTGRES_PASSWORD: password
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+volumes:
+  postgres:
