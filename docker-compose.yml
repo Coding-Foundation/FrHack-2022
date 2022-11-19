@@ -12,6 +12,7 @@ services:
       - postgres:/var/lib/postgresql/data
 
   lab:
+    image: marcpartensky/frhack-lab
     build: .
     volumes:
       - ./clustering.ipynb:/home/lab/clustering.ipynb
@@ -38,3 +39,4 @@ volumes:
   postgres:
 networks:
   caddy:
+    external: true
