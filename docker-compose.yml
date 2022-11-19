@@ -4,6 +4,8 @@ services:
     image: postgres:9.6-alpine
     ports:
       - "5433:5432"
+    networks:
+      - postgres
     environment:
       POSTGRES_USER: user
       POSTGRES_DB: db
@@ -35,9 +37,31 @@ services:
         traefik.http.routers.lab.tls.certresolver: tls
         traefik.http.services.lab.loadbalancer.server.port: 8888
 
+  pgweb_frhack:
+    image: sosedoff/pgweb
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_DB: db
+      POSTGRES_PASSWORD: password
+    networks:
+      - postgres
+      - caddy
+    depends_on:
+      - postgres
+    deploy:
+      labels:
+        traefik.enable: "true"
+        traefik.http.routers.pgweb_frhack.rule: Host(`db.frhack.marcpartensky.com`)
+        traefik.http.routers.pgweb_frhack.entrypoints: websecure
+        traefik.http.routers.pgweb_frhack.tls.certresolver: tls
+        traefik.http.services.pgweb_frhack.loadbalancer.server.port: 8081
+        # ldapAuth Register Middleware ====================================================
+        # traefik.http.routers.pgweb.middlewares: ldap_auth
 
 volumes:
   postgres:
 networks:
+  postgres:
   caddy:
     external: true
