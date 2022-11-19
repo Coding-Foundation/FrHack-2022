@@ -76,10 +76,10 @@ services:
     deploy:
       labels:
         traefik.enable: "true"
-        traefik.http.routers.front_frhack.rule: Host(`front.frhack.marcpartensky.com`)
+        traefik.http.routers.front_frhack.rule: Host(`frhack.marcpartensky.com`)
         traefik.http.routers.front_frhack.entrypoints: websecure
         traefik.http.routers.front_frhack.tls.certresolver: tls
-        traefik.http.services.front_frhack.loadbalancer.server.port: 80
+        traefik.http.services.front_frhack.loadbalancer.server.port: 3000
 
 volumes:
   postgres_frhack:
