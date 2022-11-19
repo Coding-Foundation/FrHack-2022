@@ -10,10 +10,26 @@ services:
       POSTGRES_PASSWORD: password
     volumes:
       - postgres:/var/lib/postgresql/data
+
   lab:
     build: .
     volumes:
       - ./clustering.ipynb:/home/lab
+    labels:
+      caddy: lab.marcpartensky.com
+      caddy.reverse_proxy: "{{upstreams 8888}}"
+      traefik.enable: "true"
+      traefik.http.routers.lab.rule: Host(`lab.marcpartensky.com`)
+      traefik.http.routers.lab.entrypoints: websecure
+      traefik.http.routers.lab.tls.certresolver: tls
+      traefik.http.services.lab.loadbalancer.server.port: 8888
+    deploy:
+      labels:
+        traefik.enable: "true"
+        traefik.http.routers.lab.rule: Host(`lab.marcpartensky.com`)
+        traefik.http.routers.lab.entrypoints: websecure
+        traefik.http.routers.lab.tls.certresolver: tls
+        traefik.http.services.lab.loadbalancer.server.port: 8888
 
 
 volumes:
