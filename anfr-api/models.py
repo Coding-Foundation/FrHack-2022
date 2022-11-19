@@ -20,7 +20,6 @@ class Transmitter(Base):
     creation_date = Column(String, index=True)
     system = Column(Integer, ForeignKey("system_telecom.id"))
     antenna = Column(Integer, ForeignKey("antenna.id"))
-    position = Column(Integer, ForeignKey("position.id"))
     captors = relationship("Captor", back_populates="transmitter")
 
 
@@ -28,26 +27,22 @@ class Antenna(Base):
     __tablename__ = "antenna"
 
     id = Column(Integer, primary_key=True, index=True)
-    azimut = Column(Integer, index=True)
-    altitude = Column(Integer, index=True)
     transmitter = relationship("Transmitter", back_populates="antenna")
+    position = Column(Integer, ForeignKey("position.id"))
 
 
 class Position(Base):
     __tablename__ = "position"
 
     id = Column(Integer, primary_key=True, index=True)
-    code_insee = Column(Integer, index=True)
-    code_postal = Column(Integer, index=True)
-    departement = Column(Integer, index=True)
+    code_insee = Column(String, index=True)
     lib_dpt = Column(String, index=True)
-    code_region = Column(Integer, index=True)
-    lib_region = Column(String, index=True)
+    code_region = Column(String, index=True)
     lib_maj_reg = Column(String, index=True)
-    altitude = Column(Integer, index=True)
-    description = Column(String, index=True)
     latitude = Column(Float, index=True)
     longitude = Column(Float, index=True)
+    azimut = Column(Integer, index=True)
+    altitude = Column(Integer, index=True)
 
 
 class Captor(Base):
