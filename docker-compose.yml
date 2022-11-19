@@ -21,6 +21,7 @@ services:
       - ./prep:/home/lab/prep
     networks:
       - caddy
+      - postgres
     labels:
       caddy: lab.marcpartensky.com
       caddy.reverse_proxy: "{{upstreams 8888}}"
