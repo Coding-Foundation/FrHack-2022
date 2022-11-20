@@ -1,6 +1,6 @@
 FROM node:alpine
 
-ENV NODE_ENV production
+# ENV NODE_ENV production
 ENV API_URL https://api.frhack.marcpartensky.com
 
 COPY . /opt/front
