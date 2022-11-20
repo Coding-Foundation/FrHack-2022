@@ -73,6 +73,7 @@ services:
     build: anfr-front
     environment:
       API_URL: https://api.frhack.marcpartensky.com
+      NODE_ENV: production
       PORT: 80
     networks:
       - caddy
