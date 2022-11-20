@@ -1,10 +1,8 @@
-import base64
-
 from fastapi import FastAPI
 from psycopg2.extras import RealDictCursor
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import FileResponse
-from database import conn
+from database import conn, checkIfConnectionIsAlive
 
 
 
@@ -17,6 +15,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+global connection
 
 @app.get("/")
 def read_root():
@@ -24,7 +23,9 @@ def read_root():
 
 @app.get("/clusters")
 async def getClusters():
-    cur = conn.cursor(cursor_factory=RealDictCursor)
+    global connection
+    connection = checkIfConnectionIsAlive(connection)
+    cur = connection.cursor(cursor_factory=RealDictCursor)
 
     sql = "SELECT * FROM captor_cluster"
     cur.execute(sql)
@@ -33,7 +34,9 @@ async def getClusters():
     return results
 @app.get("/captors")
 def getCaptors():
-    cur = conn.cursor(cursor_factory=RealDictCursor)
+    global connection
+    connection = checkIfConnectionIsAlive(connection)
+    cur = connection.cursor(cursor_factory=RealDictCursor)
 
     sql = "SELECT * FROM captor FULL JOIN captor_cluster ON captor.name = captor_cluster.numero"
     cur.execute(sql)
@@ -44,7 +47,9 @@ def getCaptors():
 
 @app.get("/captors/{id}")
 def getCaptorsResults(id: int):
-    cur = conn.cursor(cursor_factory=RealDictCursor)
+    global connection
+    connection = checkIfConnectionIsAlive(connection)
+    cur = connection.cursor(cursor_factory=RealDictCursor)
 
     sql = "SELECT * FROM captor_cluster WHERE " + id
     cur.execute(sql)
@@ -55,7 +60,10 @@ def getCaptorsResults(id: int):
 
 @app.get("/antennas")
 def getAntennas():
-    cur = conn.cursor(cursor_factory=RealDictCursor)
+    global connection
+    connection = checkIfConnectionIsAlive(connection)
+    cur = connection.cursor(cursor_factory=RealDictCursor)
+
     sql = "SELECT * FROM antenna"
     cur.execute(sql)
     results = cur.fetchall()
@@ -65,7 +73,10 @@ def getAntennas():
 
 @app.get("/antennas/{id}")
 def getAntennas(id: int):
-    cur = conn.cursor(cursor_factory=RealDictCursor)
+    global connection
+    connection = checkIfConnectionIsAlive(connection)
+    cur = connection.cursor(cursor_factory=RealDictCursor)
+
     sql = "SELECT * FROM antenna WHERE " + id
     cur.execute(sql)
     results = cur.fetchone()
