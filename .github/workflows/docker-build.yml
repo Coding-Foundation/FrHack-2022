@@ -25,7 +25,7 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - run: apt install -y docker-compose
+    - run: sudo apt install -y docker-compose
     - run: docker-compose build front_frhack api_frhack
     - run: docker-compose push front_frhack api_frhack
     # - name: Build front
