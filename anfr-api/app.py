@@ -1,5 +1,8 @@
+import base64
 from typing import Union
 from fastapi import FastAPI
+from starlette.responses import FileResponse
+
 from database import SessionLocal
 from import_service import ImportService
 from models import *
@@ -34,3 +37,9 @@ def getAntennas():
 def getAntennas(id: int):
     #Récupérer toutes les antennes
     return database.query(Antenna).get(id)
+
+@app.get("/results/{name}")
+def getResults(name: str):
+    decoded_string = base64.b64decode(name)
+    image_name = decoded_string.decode("utf-8")
+    return FileResponse("pictures/" + image_name + ".png")
