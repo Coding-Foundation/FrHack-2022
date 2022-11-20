@@ -1,5 +1,6 @@
 FROM python
 
+COPY . /opt/lab
 WORKDIR /opt/lab
 RUN pip install jupyterlab
 
