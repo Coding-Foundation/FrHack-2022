@@ -7,14 +7,20 @@ import {Antenna} from "./types/Antenna";
 import {Captor} from "./types/Captor";
 
 function App() {
-  const [selectedObject, setSelectedObject]  = useState<Antenna | Captor | null>(null);
+  const [selectedAntenna, setSelectedAntenna]  = useState<Antenna | null>(null);
+  const [selectedCaptor, setSelectedCaptor]  = useState<Captor | null>(null);
+
+  const selectObject = (antenna: Antenna | null, captor: Captor | null) => {
+    setSelectedAntenna(antenna);
+    setSelectedCaptor(captor);
+  }
 
   return (
     <div className={"flex flex-col h-screen"}>
       <NavBar/>
       <div className={"flex grow"}>
-        <MainMap selectObject={setSelectedObject}/>
-        <SideAlert data={selectedObject}/>
+        <MainMap selectObject={selectObject}/>
+        <SideAlert antenna={selectedAntenna} captor={selectedCaptor}/>
       </div>
     </div>
   );

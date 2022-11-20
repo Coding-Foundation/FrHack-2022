@@ -1,6 +1,8 @@
-import {Position} from "./Position";
-
 export type Antenna = {
   id: number,
-  position: Position
+  lib_dpt: string,
+  azimut: number,
+  altitude: number,
+  latitude: number,
+  longitude: number
 }

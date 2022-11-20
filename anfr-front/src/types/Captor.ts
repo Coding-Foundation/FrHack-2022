@@ -6,4 +6,5 @@ export type Captor = {
   code_postal: string,
   latitude: number,
   longitude: number,
+  cluster: number
 }
