@@ -19,8 +19,8 @@ services:
       - "8888:8888"
     build: .
     volumes:
-      - ./clustering.ipynb:/home/lab/clustering.ipynb
-      - ./prep:/home/lab/prep
+      - ./clustering.ipynb:/opt/lab/clustering.ipynb
+      - ./prep:/opt/lab/prep
     networks:
       - caddy
       - postgres
@@ -59,7 +59,7 @@ services:
       - postgres
       - caddy
     volumes:
-      - ./prep:/home/anfr/prep
+      - ./prep:/opt/anfr/prep
     deploy:
       labels:
         traefik.enable: "true"
