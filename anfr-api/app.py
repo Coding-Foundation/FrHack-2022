@@ -5,8 +5,6 @@ from starlette.responses import FileResponse
 from fastapi.openapi.utils import get_openapi
 from database import conn
 
-
-
 app = FastAPI()
 
 app.add_middleware(
@@ -107,13 +105,26 @@ def getAntennas(id: int):
 def getTransmitters(id_antenna: int):
     try:
         cur = conn.cursor(cursor_factory=RealDictCursor)
-        sql = "SELECT * FROM transmitter FULL JOIN system_telecom ON transmitter.system = system_telecom.id WHERE antenna = " + str(id_antenna)
+        sql = "SELECT * FROM transmitter WHERE antenna = " + str(id_antenna)
         cur.execute(sql)
         results = cur.fetchall()
         cur.close()
         return results
     except Exception:
         print("Erreur")
+
+@app.get("/systems/{id_system}")
+def getSystems(id_system: int):
+    try:
+        cur = conn.cursor(cursor_factory=RealDictCursor)
+        sql = "SELECT * FROM system_telecom WHERE id = " + str(id_system)
+        cur.execute(sql)
+        results = cur.fetchone()
+        cur.close()
+        return results
+    except Exception:
+        print("Erreur")
+
 
 
 @app.get("/results/{name}")
