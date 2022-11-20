@@ -10,14 +10,13 @@ services:
       POSTGRES_USER: user
       POSTGRES_DB: db
       POSTGRES_PASSWORD: password
+    command: ["postgres", "-c", "log_statement=all", "-c", "log_destination=stderr"]
     volumes:
       - postgres_frhack:/var/lib/postgresql/data
 
   lab_frhack:
-    image: marcpartensky/frhack-lab
-    ports:
-      - "8888:8888"
-    build: .
+    image: marcpartensky/lab-frhack
+    build: prep
     volumes:
       - ./clustering.ipynb:/opt/lab/clustering.ipynb
       - ./prep:/opt/lab/prep
@@ -58,6 +57,12 @@ services:
     networks:
       - postgres
       - caddy
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_DB: db
+      POSTGRES_PASSWORD: password
+      POSTGRES_PORT: 5432
+      POSTGRES_HOST: postgres_frhack
     volumes:
       - ./prep:/opt/anfr/prep
     deploy:
@@ -71,6 +76,10 @@ services:
   front_frhack:
     image: marcpartensky/front-frhack
     build: anfr-front
+    environment:
+      API_URL: https://api.frhack.marcpartensky.com
+      NODE_ENV: production
+      PORT: 80
     networks:
       - caddy
     deploy:
@@ -79,7 +88,22 @@ services:
         traefik.http.routers.front_frhack.rule: Host(`frhack.marcpartensky.com`)
         traefik.http.routers.front_frhack.entrypoints: websecure
         traefik.http.routers.front_frhack.tls.certresolver: tls
-        traefik.http.services.front_frhack.loadbalancer.server.port: 3000
+        traefik.http.services.front_frhack.loadbalancer.server.port: 80
+
+  gitbook_frhack:
+    image: marcpartensky/gitbook
+    restart: unless-stopped
+    volumes:
+      - ./README.md:/opt/gitbook/book/README.md
+    networks:
+      - caddy
+    deploy:
+      labels:
+        traefik.enable: "true"
+        traefik.http.routers.gitbook_frhack.rule: Host(`book.frhack.marcpartensky.com`)
+        traefik.http.routers.gitbook_frhack.entrypoints: websecure
+        traefik.http.routers.gitbook_frhack.tls.certresolver: tls
+        traefik.http.services.gitbook_frhack.loadbalancer.server.port: 4000
 
 volumes:
   postgres_frhack:
