@@ -1,7 +1,7 @@
 FROM python:3.9.4-alpine
 
-COPY . /home/anfr/api
-WORKDIR /home/anfr/api
+COPY . /opt/anfr/api
+WORKDIR /opt/anfr/api
 
 RUN pip install -Ur requirements.txt
 
