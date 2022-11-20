@@ -90,6 +90,15 @@ def getAntennas(id: int):
     cur.close()
     return results
 
+@app.get("/emitters/{id_antenna}")
+def getAntennas(id_antenna: int):
+    cur = conn.cursor(cursor_factory=RealDictCursor)
+    sql = "SELECT * FROM transmitter WHERE antenna = " + id_antenna
+    cur.execute(sql)
+    results = cur.fetchone()
+    cur.close()
+    return results
+
 
 @app.get("/results/{name}")
 def getResults(name: str):
