@@ -84,7 +84,7 @@ def getAntennas():
 @app.get("/antennas/{id}")
 def getAntennas(id: int):
     cur = conn.cursor(cursor_factory=RealDictCursor)
-    sql = "SELECT * FROM antenna WHERE id = " + id
+    sql = "SELECT * FROM antenna WHERE id = " + str(id)
     cur.execute(sql)
     results = cur.fetchone()
     cur.close()
@@ -93,7 +93,7 @@ def getAntennas(id: int):
 @app.get("/emitters/{id_antenna}")
 def getAntennas(id_antenna: int):
     cur = conn.cursor(cursor_factory=RealDictCursor)
-    sql = "SELECT * FROM transmitter WHERE antenna = " + id_antenna
+    sql = "SELECT * FROM transmitter WHERE antenna = " + str(id_antenna)
     cur.execute(sql)
     results = cur.fetchall()
     cur.close()
