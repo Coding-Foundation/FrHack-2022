@@ -73,6 +73,7 @@ services:
     build: anfr-front
     environment:
       API_URL: https://api.frhack.marcpartensky.com
+      PORT: 80
     networks:
       - caddy
     deploy:
@@ -81,7 +82,7 @@ services:
         traefik.http.routers.front_frhack.rule: Host(`frhack.marcpartensky.com`)
         traefik.http.routers.front_frhack.entrypoints: websecure
         traefik.http.routers.front_frhack.tls.certresolver: tls
-        traefik.http.services.front_frhack.loadbalancer.server.port: 3000
+        traefik.http.services.front_frhack.loadbalancer.server.port: 80
 
 volumes:
   postgres_frhack:

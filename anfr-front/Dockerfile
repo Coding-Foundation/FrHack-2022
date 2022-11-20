@@ -4,5 +4,6 @@ COPY . /opt/front
 WORKDIR /opt/front
 
 RUN npm i
+RUN npm i -g serve
 
-ENTRYPOINT [ "npm", "start" ]
+ENTRYPOINT [ "serve", "-s" ]
