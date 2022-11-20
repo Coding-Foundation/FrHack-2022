@@ -56,6 +56,12 @@ services:
     networks:
       - postgres
       - caddy
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_DB: db
+      POSTGRES_PASSWORD: password
+      POSTGRES_PORT: 5432
+      POSTGRES_HOST: postgres_frhack
     volumes:
       - ./prep:/opt/anfr/prep
     deploy:
