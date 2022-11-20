@@ -71,6 +71,8 @@ services:
   front_frhack:
     image: marcpartensky/front-frhack
     build: anfr-front
+    environment:
+      API_URL: https://api.frhack.marcpartensky.com
     networks:
       - caddy
     deploy:
