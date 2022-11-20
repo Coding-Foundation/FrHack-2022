@@ -29,7 +29,9 @@ jobs:
       with:
         context: prep
         push: true
-        tags: marcpartensky/lab-frhack
+        tags: marcpartensky/lab-frhack:latest
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
   build_front:
     name: Build front
@@ -48,7 +50,9 @@ jobs:
       with:
         context: anfr-front
         push: true
-        tags: marcpartensky/front-frhack
+        tags: marcpartensky/front-frhack:latest
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
   build_back:
     name: Build back
@@ -67,7 +71,10 @@ jobs:
       with:
         context: anfr-api
         push: true
-        tags: marcpartensky/api-frhack
+        tags: marcpartensky/api-frhack:latest
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
 
   deploy_back:
     name: Deploy back
