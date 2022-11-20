@@ -1,11 +1,22 @@
 import base64
 
 from fastapi import FastAPI
+from psycopg2.extras import RealDictCursor
+from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import FileResponse
-from database import conn, cur
+from database import conn
+
+
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def read_root():
@@ -13,37 +24,64 @@ def read_root():
 
 @app.get("/clusters")
 async def getClusters():
-    sql = "SELECT * FROM captor_cluster"
+    cur = conn.cursor(cursor_factory=RealDictCursor)
 
-    return cur.execute(sql).fetchAll()
+    sql = "SELECT * FROM captor_cluster"
+    cur.execute(sql)
+    results = cur.fetchall()
+    cur.close()
+    return results
 @app.get("/captors")
 def getCaptors():
-    sql = "SELECT * FROM captor"
-    # Récupérer tous les capteurs, y ajouter aussi leurs profil type
-    return cur.execute(sql)
+    cur = conn.cursor(cursor_factory=RealDictCursor)
+
+    sql = "SELECT * FROM captor FULL JOIN captor_cluster ON captor.name = captor_cluster.numero"
+    cur.execute(sql)
+    result = cur.fetchall()
+    cur.close()
+    return result
 
 
 @app.get("/captors/{id}")
 def getCaptorsResults(id: int):
+    cur = conn.cursor(cursor_factory=RealDictCursor)
+
     sql = "SELECT * FROM captor_cluster WHERE " + id
-    # Récupérer les informations du capteur ainsi que les résultats
-    return cur.execute(sql)
+    cur.execute(sql)
+    result = cur.fetchone()
+    cur.close()
+    return result
 
 
 @app.get("/antennas")
 def getAntennas():
+    cur = conn.cursor(cursor_factory=RealDictCursor)
     sql = "SELECT * FROM antenna"
-    return cur.execute(sql)
+    cur.execute(sql)
+    results = cur.fetchall()
+    cur.close()
+    return results
 
 
 @app.get("/antennas/{id}")
 def getAntennas(id: int):
+    cur = conn.cursor(cursor_factory=RealDictCursor)
     sql = "SELECT * FROM antenna WHERE " + id
-    return cur.execute(sql)
+    cur.execute(sql)
+    results = cur.fetchone()
+    cur.close()
+    return results
 
 
 @app.get("/results/{name}")
 def getResults(name: str):
-    decoded_string = base64.b64decode(name)
-    image_name = decoded_string.decode("utf-8")
-    return FileResponse("../prep/week_derive_plots/" + image_name + ".png")
+    return FileResponse("../prep/week_derive_plots/" + name + ".png")
+
+
+@app.get("/results-cluster/{id}")
+def getResults(id: str):
+    return FileResponse("../prep/plots/cluster/" + id + ".png")
+
+@app.get("/raw-results/{name}")
+def getResults(name: str):
+    return FileResponse("../prep/plots/week_absolute/" + name + ".png")
