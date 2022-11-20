@@ -14,7 +14,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-global connection
+connection = conn
 
 
 def custom_openapi():
