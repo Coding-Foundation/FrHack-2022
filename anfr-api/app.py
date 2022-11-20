@@ -1,5 +1,3 @@
-import base64
-
 from fastapi import FastAPI
 from psycopg2.extras import RealDictCursor
 from starlette.middleware.cors import CORSMiddleware
