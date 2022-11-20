@@ -9,8 +9,6 @@ class SystemTelecom(Base):
     name = Column(String, unique=True, index=True)
     generation = Column(String, index=True)
     operator = Column(String, index=True)
-    transmiters = relationship("Transmitter", back_populates="system")
-
 
 
 class Transmitter(Base):
@@ -21,14 +19,11 @@ class Transmitter(Base):
     ending_date = Column(String, index=True)
     system = Column(Integer, ForeignKey("system_telecom.id"))
     antenna = Column(Integer, ForeignKey("antenna.id"))
-    captors = relationship("Captor", back_populates="transmitter")
 
 
 class Antenna(Base):
     __tablename__ = "antenna"
-
     id = Column(Integer, primary_key=True, index=True)
-    transmitter = relationship("Transmitter", back_populates="antenna")
     position = Column(Integer, ForeignKey("position.id"))
 
 
@@ -56,7 +51,6 @@ class Captor(Base):
     code_postal = Column(String, index=True)
     latitude = Column(Float, index=True)
     longitude = Column(Float, index=True)
-    measures = relationship("Measure", back_populates="captor")
     transmitter = Column(Integer, ForeignKey("transmitter.id"))
 
 
@@ -67,3 +61,10 @@ class Measure(Base):
     value = Column(Float, index=True)
     date = Column(Date, index=True)
     captor = Column(Integer, ForeignKey("captor.id"))
+
+class CaptorCluster(Base):
+    __tablename__ = "captor_cluster"
+
+    id = Column(Integer, primary_key=True, index=True)
+    numero = Column(String, index=True)
+    cluster = Column(Integer, index=True)

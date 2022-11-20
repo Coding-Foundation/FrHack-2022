@@ -1,46 +1,45 @@
 import base64
-from typing import Union
+
 from fastapi import FastAPI
 from starlette.responses import FileResponse
-
-from database import SessionLocal
-from import_service import ImportService
-from models import *
+from database import conn, cur
 
 app = FastAPI()
-
-database = SessionLocal()
-
-importService = ImportService(database)
 
 
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
 
+@app.get("/clusters")
+async def getClusters():
+    sql = "SELECT * FROM captor_cluster"
 
+    return cur.execute(sql).fetchAll()
 @app.get("/captors")
 def getCaptors():
+    sql = "SELECT * FROM captor"
     # Récupérer tous les capteurs, y ajouter aussi leurs profil type
-    return database.query(Captor).all()
+    return cur.execute(sql)
 
 
 @app.get("/captors/{id}")
 def getCaptorsResults(id: int):
+    sql = "SELECT * FROM captor_cluster WHERE " + id
     # Récupérer les informations du capteur ainsi que les résultats
-    return database.query(Captor).get(id)
+    return cur.execute(sql)
 
 
 @app.get("/antennas")
 def getAntennas():
-    # Récupérer toutes les antennes
-    return database.query(Antenna).all()
+    sql = "SELECT * FROM antenna"
+    return cur.execute(sql)
 
 
 @app.get("/antennas/{id}")
 def getAntennas(id: int):
-    # Récupérer toutes les antennes
-    return database.query(Antenna).get(id)
+    sql = "SELECT * FROM antenna WHERE " + id
+    return cur.execute(sql)
 
 
 @app.get("/results/{name}")
