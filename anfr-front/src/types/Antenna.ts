@@ -1,5 +1,6 @@
+import {Position} from "./Position";
+
 export type Antenna = {
   id: number,
-  azimut: number,
-  altitude: number
+  position: Position
 }
