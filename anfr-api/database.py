@@ -1,9 +1,6 @@
 import psycopg2
-<<<<<<< HEAD
 from psycopg2 import OperationalError
-=======
 import os
->>>>>>> 83ecd22da410c617f24eab895163dda73a13790a
 
 HOST = os.environ.get("POSTGRES_HOST") or "marcpartensky.com"
 PORT = os.environ.get("POSTGRES_PORT") or "5433"
