@@ -1,4 +1,4 @@
-FROM python:3.9.4-alpine
+FROM python:alpine
 
 COPY . /opt/anfr/api
 WORKDIR /opt/anfr/api
