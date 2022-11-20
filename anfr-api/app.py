@@ -107,7 +107,7 @@ def getAntennas(id: int):
 def getTransmitters(id_antenna: int):
     try:
         cur = conn.cursor(cursor_factory=RealDictCursor)
-        sql = "SELECT * FROM transmitter WHERE antenna = " + str(id_antenna)
+        sql = "SELECT * FROM transmitter FULL JOIN system_telecom ON transmitter.system = system_telecom.id WHERE antenna = " + str(id_antenna)
         cur.execute(sql)
         results = cur.fetchall()
         cur.close()
