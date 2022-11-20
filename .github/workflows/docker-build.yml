@@ -25,19 +25,22 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Build front
-      uses: docker/build-push-action@v3
-      with:
-        context: anfr-front
-        push: true
-        tags: marcpartensky/front-frhack
+    - run: apt install -y docker-compose
+    - run: docker-compose build front_frhack api_frhack
+    - run: docker-compose push front_frhack api_frhack
+    # - name: Build front
+    #   uses: docker/build-push-action@v3
+    #   with:
+    #     context: anfr-front
+    #     push: true
+    #     tags: marcpartensky/front-frhack
 
-    - name: Build back
-      uses: docker/build-push-action@v3
-      with:
-        context: anfr-api
-        push: true
-        tags: marcpartensky/api-frhack
+    # - name: Build back
+    #   uses: docker/build-push-action@v3
+    #   with:
+    #     context: anfr-api
+    #     push: true
+    #     tags: marcpartensky/api-frhack
 
   deploy:
     name: Deploy
