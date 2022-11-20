@@ -101,31 +101,6 @@ def getAntennas(id: int):
     except Exception:
         print("Erreur")
 
-@app.get("/transmitters/{id_antenna}")
-def getTransmitters(id_antenna: int):
-    try:
-        cur = conn.cursor(cursor_factory=RealDictCursor)
-        sql = "SELECT * FROM transmitter WHERE antenna = " + str(id_antenna)
-        cur.execute(sql)
-        results = cur.fetchall()
-        cur.close()
-        return results
-    except Exception:
-        print("Erreur")
-
-@app.get("/systems/{id_system}")
-def getSystems(id_system: int):
-    try:
-        cur = conn.cursor(cursor_factory=RealDictCursor)
-        sql = "SELECT * FROM system_telecom WHERE id = " + str(id_system)
-        cur.execute(sql)
-        results = cur.fetchone()
-        cur.close()
-        return results
-    except Exception:
-        print("Erreur")
-
-
 
 @app.get("/results/{name}")
 def getResults(name: str):
