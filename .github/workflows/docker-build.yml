@@ -47,11 +47,11 @@ jobs:
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USER }}
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
           # key: ${{ secrets.KEY }}
-        password: ${{ secrets.PASSWORD }}
-        port: ${{ secrets.PORT }}
+        password: ${{ secrets.SSH_PASSWORD }}
+        port: ${{ secrets.SSH_PORT }}
         script: |
           docker service update --image=marcpartensky/front-frhack vps_front_frhack
           docker service update --image=marcpartensky/api-frhack vps_api_frhack
