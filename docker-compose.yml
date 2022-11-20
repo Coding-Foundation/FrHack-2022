@@ -14,7 +14,7 @@ services:
       - postgres_frhack:/var/lib/postgresql/data
 
   lab_frhack:
-    image: marcpartensky/frhack-lab
+    image: marcpartensky/lab-frhack
     build: prep
     volumes:
       - ./clustering.ipynb:/opt/lab/clustering.ipynb
