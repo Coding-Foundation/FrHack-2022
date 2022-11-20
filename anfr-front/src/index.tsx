@@ -5,7 +5,7 @@ import App from './App';
 import axios from "axios";
 import {API_URL} from "./conf.api";
 
-axios.defaults.baseURL = API_URL;
+axios.defaults.baseURL = process.env.API_URL || API_URL;
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 axios.interceptors.request.use(config => {
