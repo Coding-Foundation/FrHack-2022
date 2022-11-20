@@ -93,7 +93,7 @@ services:
     image: marcpartensky/gitbook
     restart: unless-stopped
     volumes:
-      - ./:/opt/gitbook/book
+      - ./README.md:/opt/gitbook/book/README.md
     networks:
       - caddy
     deploy:
