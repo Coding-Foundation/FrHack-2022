@@ -30,7 +30,7 @@ const SideAlert: React.FC<Props> = (props) => {
                 <div className={"mt-2"}><span className={"font-semibold"}>Latitude: </span> <span>{antenna.latitude}</span></div>
 
               <h2 className={"font-bold mt-8"}>Information sur les émetteurs :</h2>
-              <div className={"mt-2 overflow-y-scroll max-h-60"}>
+              <div className={"mt-2 overflow-y-auto max-h-60"}>
                 {
                     transmitters && transmitters.map((transmitter) => (
                       <div className={"mt-4"}>
