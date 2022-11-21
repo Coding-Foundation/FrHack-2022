@@ -131,6 +131,55 @@ def getAntenna(request: Request, id: int):
     except Exception:
         print("Erreur")
 
+@app.get("/transmitters/{id_antenna}")
+async def getTransmitter(request: Request, id_antenna: int):
+    try:
+        conn = request.state.connection
+        cur = conn.cursor(cursor_factory=RealDictCursor)
+
+        sql = "SELECT * FROM transmitter WHERE antenna = " + id_antenna
+        cur.execute(sql)
+        results = cur.fetchall()
+        cur.close()
+        conn.close()
+        return results
+    except Exception:
+        print("Erreur")
+        return
+
+
+@app.get("/transmitters-join/{id_antenna}")
+async def getTransmitter(request: Request, id_antenna: int):
+    try:
+        conn = request.state.connection
+        cur = conn.cursor(cursor_factory=RealDictCursor)
+
+        sql = "SELECT * FROM transmitter FULL JOIN system_telcom ON transmitter.system = system_telecom.id WHERE antenna = " + id_antenna
+        cur.execute(sql)
+        results = cur.fetchall()
+        cur.close()
+        conn.close()
+        return results
+    except Exception:
+        print("Erreur")
+        return
+
+@app.get("/systems_telecom")
+async def getSystems(request: Request):
+    try:
+        conn = request.state.connection
+        cur = conn.cursor(cursor_factory=RealDictCursor)
+
+        sql = "SELECT * FROM system_telecom"
+        cur.execute(sql)
+        results = cur.fetchall()
+        cur.close()
+        conn.close()
+        return results
+    except Exception:
+        print("Erreur")
+        return
+
 
 @app.get("/results/{name}")
 def getResults(request: Request, name: str):
