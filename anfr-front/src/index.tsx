@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import axios from "axios";
 import {API_URL} from "./conf.api";
+import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
 axios.defaults.baseURL = API_URL;
 axios.defaults.headers.post['Content-Type'] = 'application/json';
@@ -25,3 +26,6 @@ root.render(
     <App />
   </React.StrictMode>
 );
+
+serviceWorkerRegistration.register();
+
