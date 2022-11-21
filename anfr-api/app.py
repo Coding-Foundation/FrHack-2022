@@ -138,7 +138,7 @@ async def getTransmitter(request: Request, id_antenna: int):
         conn = request.state.connection
         cur = conn.cursor(cursor_factory=RealDictCursor)
 
-        sql = "SELECT * FROM transmitter FULL JOIN system_telecom ON transmitter.system = system_telecom.id WHERE transmitter.antenna = '" + str(id_antenna) + "'"
+        sql = "SELECT transmitter.id, transmitter.creation_date, transmitter.system, system_telecom.generation, system_telecom.operator FROM transmitter FULL JOIN system_telecom ON transmitter.system = system_telecom.id WHERE transmitter.antenna = '" + str(id_antenna) + "'"
         print(sql)
         cur.execute(sql)
         results = cur.fetchall()
