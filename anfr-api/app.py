@@ -1,9 +1,10 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from psycopg2.extras import RealDictCursor
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import FileResponse
 from fastapi.openapi.utils import get_openapi
-from database import conn
+import psycopg2
+import os
 
 app = FastAPI()
 
@@ -34,13 +35,30 @@ def custom_openapi():
 
 app.openapi = custom_openapi
 
+
+@app.middleware("http")
+def initConnection(request: Request, call_next):
+    HOST = os.environ.get("POSTGRES_HOST") or "marcpartensky.com"
+    PORT = os.environ.get("POSTGRES_PORT") or "5433"
+    DATABASE = os.environ.get("POSTGRES_DB") or "db"
+    USER = os.environ.get("POSTGRES_USER") or "user"
+    PASSWORD = os.environ.get("POSTGRES_PASSWORD") or "password"
+    conn = psycopg2.connect("host=%s dbname=%s user=%s password=%s port=%s" % (HOST, DATABASE, USER, PASSWORD, PORT))
+    request.state.connection = conn
+    response = call_next(request)
+    conn.close()
+    return response
+
+
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
 
+
 @app.get("/clusters")
-async def getClusters():
+async def getClusters(request: Request):
     try:
+        conn = request.state.connection
         cur = conn.cursor(cursor_factory=RealDictCursor)
 
         sql = "SELECT * FROM captor_cluster"
@@ -50,11 +68,13 @@ async def getClusters():
         return results
     except Exception:
         print("Erreur")
+        return
 
 
 @app.get("/captors")
-def getCaptors():
+def getCaptors(request: Request):
     try:
+        conn = request.state.connection
         cur = conn.cursor(cursor_factory=RealDictCursor)
         sql = "SELECT * FROM captor FULL JOIN captor_cluster ON captor.name = captor_cluster.numero"
         cur.execute(sql)
@@ -64,11 +84,13 @@ def getCaptors():
 
     except Exception:
         print("Erreur")
+        return
 
 
 @app.get("/captors/{id}")
-def getCaptorsResults(id: int):
+def getCaptorsResults(request: Request, id: int):
     try:
+        conn = request.state.connection
         cur = conn.cursor(cursor_factory=RealDictCursor)
         sql = "SELECT * FROM captor_cluster WHERE " + id
         cur.execute(sql)
@@ -77,10 +99,12 @@ def getCaptorsResults(id: int):
         return result
     except Exception:
         print("Erreur")
+        return
 
 
 @app.get("/antennas")
-def getAntennas():
+def getAntennas(request: Request):
+    conn = request.state.connection
     cur = conn.cursor(cursor_factory=RealDictCursor)
     sql = "SELECT * FROM antenna"
     cur.execute(sql)
@@ -90,8 +114,9 @@ def getAntennas():
 
 
 @app.get("/antennas/{id}")
-def getAntennas(id: int):
+def getAntenna(request: Request, id: int):
     try:
+        conn = request.state.connection
         cur = conn.cursor(cursor_factory=RealDictCursor)
         sql = "SELECT * FROM antenna WHERE id = " + str(id)
         cur.execute(sql)
