@@ -1,9 +1,10 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from psycopg2.extras import RealDictCursor
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import FileResponse
-from database import conn, checkIfConnectionIsAlive
 from fastapi.openapi.utils import get_openapi
+import psycopg2
+import os
 
 app = FastAPI()
 
@@ -14,7 +15,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-connection = conn
 
 
 def custom_openapi():
@@ -35,63 +35,79 @@ def custom_openapi():
 
 app.openapi = custom_openapi
 
+
+@app.middleware("http")
+def initConnection(request: Request, call_next):
+    HOST = os.environ.get("POSTGRES_HOST") or "marcpartensky.com"
+    PORT = os.environ.get("POSTGRES_PORT") or "5433"
+    DATABASE = os.environ.get("POSTGRES_DB") or "db"
+    USER = os.environ.get("POSTGRES_USER") or "user"
+    PASSWORD = os.environ.get("POSTGRES_PASSWORD") or "password"
+    conn = psycopg2.connect("host=%s dbname=%s user=%s password=%s port=%s" % (HOST, DATABASE, USER, PASSWORD, PORT))
+    request.state.connection = conn
+    response = call_next(request)
+    return response
+
+
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
 
+
 @app.get("/clusters")
-async def getClusters():
-    global connection
+async def getClusters(request: Request):
     try:
-        connection = checkIfConnectionIsAlive(connection)
-        cur = connection.cursor(cursor_factory=RealDictCursor)
+        conn = request.state.connection
+        cur = conn.cursor(cursor_factory=RealDictCursor)
 
         sql = "SELECT * FROM captor_cluster"
         cur.execute(sql)
         results = cur.fetchall()
         cur.close()
+        conn.close()
         return results
     except Exception:
         print("Erreur")
+        return
 
 
 @app.get("/captors")
-def getCaptors():
+def getCaptors(request: Request):
     try:
-        global connection
-        connection = checkIfConnectionIsAlive(connection)
-        cur = connection.cursor(cursor_factory=RealDictCursor)
+        conn = request.state.connection
+        cur = conn.cursor(cursor_factory=RealDictCursor)
         sql = "SELECT * FROM captor FULL JOIN captor_cluster ON captor.name = captor_cluster.numero"
         cur.execute(sql)
         result = cur.fetchall()
         cur.close()
+        conn.close()
         return result
     except Exception:
         print("Erreur")
+        return
 
 
 @app.get("/captors/{id}")
-def getCaptorsResults(id: int):
+def getCaptorsResults(request: Request, id: int):
     try:
-        global connection
-        connection = checkIfConnectionIsAlive(connection)
-        cur = connection.cursor(cursor_factory=RealDictCursor)
-
+        conn = request.state.connection
+        cur = conn.cursor(cursor_factory=RealDictCursor)
         sql = "SELECT * FROM captor_cluster WHERE " + id
         cur.execute(sql)
         result = cur.fetchone()
         cur.close()
+        conn.close()
+
         return result
     except Exception:
         print("Erreur")
+        return
 
 
 @app.get("/antennas")
-def getAntennas():
-    global connection
-    connection = checkIfConnectionIsAlive(connection)
-    cur = connection.cursor(cursor_factory=RealDictCursor)
-
+def getAntennas(request: Request):
+    conn = request.state.connection
+    cur = conn.cursor(cursor_factory=RealDictCursor)
     sql = "SELECT * FROM antenna"
     cur.execute(sql)
     results = cur.fetchall()
@@ -100,29 +116,34 @@ def getAntennas():
 
 
 @app.get("/antennas/{id}")
-def getAntennas(id: int):
+def getAntenna(request: Request, id: int):
     try:
-        global connection
-        connection = checkIfConnectionIsAlive(connection)
-        cur = connection.cursor(cursor_factory=RealDictCursor)
+        conn = request.state.connection
+        cur = conn.cursor(cursor_factory=RealDictCursor)
+
         sql = "SELECT * FROM antenna WHERE id = " + str(id)
         cur.execute(sql)
         results = cur.fetchone()
         cur.close()
+        conn.close()
+
         return results
     except Exception:
         print("Erreur")
 
 
 @app.get("/results/{name}")
-def getResults(name: str):
+def getResults(request: Request, name: str):
+    request.state.connection.close()
     return FileResponse("../prep/week_derive_plots/" + name + ".png")
 
 
 @app.get("/results-cluster/{id}")
-def getResults(id: str):
+def getResults(request: Request, id: str):
+    request.state.connection.close()
     return FileResponse("../prep/plots/cluster/" + id + ".png")
 
 @app.get("/raw-results/{name}")
-def getResults(name: str):
+def getResults(request: Request, name: str):
+    request.state.connection.close()
     return FileResponse("../prep/plots/week_absolute/" + name + ".png")
