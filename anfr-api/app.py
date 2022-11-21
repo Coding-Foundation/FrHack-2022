@@ -81,7 +81,6 @@ def getCaptors(request: Request):
         result = cur.fetchall()
         cur.close()
         return result
-
     except Exception:
         print("Erreur")
         return
@@ -118,6 +117,7 @@ def getAntenna(request: Request, id: int):
     try:
         conn = request.state.connection
         cur = conn.cursor(cursor_factory=RealDictCursor)
+
         sql = "SELECT * FROM antenna WHERE id = " + str(id)
         cur.execute(sql)
         results = cur.fetchone()
