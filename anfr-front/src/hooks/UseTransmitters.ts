@@ -8,7 +8,9 @@ const UseTransmitters = (antennaId: number) => {
 
     const fetchTransmitters = async () => {
         try {
-            const {data} = await axios.get<Transmitter[]>("transmitters/" + antennaId);
+            let {data} = await axios.get<Transmitter[]>("transmitters/" + antennaId);
+            if (!data)
+                data = []
             setTransmitters(data);
         } catch (e) {
             console.log(e);
@@ -18,7 +20,7 @@ const UseTransmitters = (antennaId: number) => {
 
     useEffect(() => {
         fetchTransmitters()
-    }, [])
+    }, [antennaId])
 
     return {transmitters}
 }

@@ -2,6 +2,7 @@ import {Antenna} from "../types/Antenna";
 import {Captor} from "../types/Captor";
 import React, {useState} from "react";
 import {API_URL} from "../conf.api";
+import UseTransmitters from "../hooks/UseTransmitters";
 
 type Props = {
     antenna: Antenna | null
@@ -10,7 +11,8 @@ type Props = {
 
 const SideAlert: React.FC<Props> = (props) => {
     const [firstTabSelected, setFirstTabSelected] = useState(true);
-
+    const id = props.antenna?.id || 0;
+    const {transmitters} = UseTransmitters(id);
     if (!props.antenna && !props.captor)
         return <></>
 
@@ -20,11 +22,24 @@ const SideAlert: React.FC<Props> = (props) => {
 
         return (
             <div className="artboard artboard-horizontal phone-3 mx-8">
-                <div className={"mt-8"}><span className={"font-semibold"}>Id de l'antenne:</span> <span>{antenna.id}</span></div>
+                <div className={"mt-8"}><span className={"font-semibold"}>Id de l'antenne: </span> <span>{antenna.id}</span></div>
                 <div className={"mt-2"}><span className={"font-semibold"}>Altitude: </span> <span>{antenna.altitude}</span></div>
                 <div className={"mt-2"}><span className={"font-semibold"}>Azimut: </span> <span>{antenna.azimut}</span></div>
                 <div className={"mt-2"}><span className={"font-semibold"}>Longitude: </span> <span>{antenna.longitude}</span></div>
                 <div className={"mt-2"}><span className={"font-semibold"}>Latitude: </span> <span>{antenna.latitude}</span></div>
+                <div>
+                  {
+                    transmitters && transmitters.map((transmitter) => (
+                      <div>
+                        <span className={"font-semibold"}>Id de l'émeteur: </span> <span>{transmitter.id}</span>
+                        <span className={"font-semibold"}>Nom: </span> <span>{transmitter.name}</span>
+                        <span className={"font-semibold"}>Date de création: </span> <span>{transmitter.creation_date}</span>
+                        <span className={"font-semibold"}>Génération: </span> <span>{transmitter.generation}</span>
+                        <span className={"font-semibold"}>Opérateur: </span> <span>{transmitter.operator}</span>
+                      </div>
+                    ))
+                  }
+                </div>
             </div>
         )
     }
