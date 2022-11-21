@@ -16,9 +16,9 @@ function App() {
   }
 
   return (
-    <div className={"flex flex-col h-screen"}>
+    <div className={"flex flex-col h-screen max-h-screen"}>
       <NavBar/>
-      <div className={"flex grow"}>
+      <div className={"flex flex-col md:flex-row grow"}>
         <MainMap selectObject={selectObject}/>
         <SideAlert antenna={selectedAntenna} captor={selectedCaptor}/>
       </div>
