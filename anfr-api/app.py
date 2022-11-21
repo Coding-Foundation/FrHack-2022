@@ -46,7 +46,6 @@ def initConnection(request: Request, call_next):
     conn = psycopg2.connect("host=%s dbname=%s user=%s password=%s port=%s" % (HOST, DATABASE, USER, PASSWORD, PORT))
     request.state.connection = conn
     response = call_next(request)
-    conn.close()
     return response
 
 
@@ -65,6 +64,7 @@ async def getClusters(request: Request):
         cur.execute(sql)
         results = cur.fetchall()
         cur.close()
+        conn.close()
         return results
     except Exception:
         print("Erreur")
@@ -80,6 +80,7 @@ def getCaptors(request: Request):
         cur.execute(sql)
         result = cur.fetchall()
         cur.close()
+        conn.close()
         return result
     except Exception:
         print("Erreur")
@@ -95,6 +96,8 @@ def getCaptorsResults(request: Request, id: int):
         cur.execute(sql)
         result = cur.fetchone()
         cur.close()
+        conn.close()
+
         return result
     except Exception:
         print("Erreur")
@@ -122,20 +125,25 @@ def getAntenna(request: Request, id: int):
         cur.execute(sql)
         results = cur.fetchone()
         cur.close()
+        conn.close()
+
         return results
     except Exception:
         print("Erreur")
 
 
 @app.get("/results/{name}")
-def getResults(name: str):
+def getResults(request: Request, name: str):
+    request.state.connection.close()
     return FileResponse("../prep/week_derive_plots/" + name + ".png")
 
 
 @app.get("/results-cluster/{id}")
-def getResults(id: str):
+def getResults(request: Request, id: str):
+    request.state.connection.close()
     return FileResponse("../prep/plots/cluster/" + id + ".png")
 
 @app.get("/raw-results/{name}")
-def getResults(name: str):
+def getResults(request: Request, name: str):
+    request.state.connection.close()
     return FileResponse("../prep/plots/week_absolute/" + name + ".png")
