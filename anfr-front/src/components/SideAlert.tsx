@@ -22,20 +22,23 @@ const SideAlert: React.FC<Props> = (props) => {
 
         return (
             <div className="artboard artboard-horizontal phone-3 mx-8">
+              <h2 className={"font-bold"}>Information sur l'antenne :</h2>
                 <div className={"mt-8"}><span className={"font-semibold"}>Id de l'antenne: </span> <span>{antenna.id}</span></div>
                 <div className={"mt-2"}><span className={"font-semibold"}>Altitude: </span> <span>{antenna.altitude}</span></div>
                 <div className={"mt-2"}><span className={"font-semibold"}>Azimut: </span> <span>{antenna.azimut}</span></div>
                 <div className={"mt-2"}><span className={"font-semibold"}>Longitude: </span> <span>{antenna.longitude}</span></div>
                 <div className={"mt-2"}><span className={"font-semibold"}>Latitude: </span> <span>{antenna.latitude}</span></div>
-                <div>
-                  {
+
+              <h2 className={"font-bold mt-8"}>Information sur les émetteurs :</h2>
+              <div className={"mt-2 overflow-y-scroll max-h-60"}>
+                {
                     transmitters && transmitters.map((transmitter) => (
-                      <div>
-                        <span className={"font-semibold"}>Id de l'émeteur: </span> <span>{transmitter.id}</span>
-                        <span className={"font-semibold"}>Nom: </span> <span>{transmitter.name}</span>
-                        <span className={"font-semibold"}>Date de création: </span> <span>{transmitter.creation_date}</span>
-                        <span className={"font-semibold"}>Génération: </span> <span>{transmitter.generation}</span>
-                        <span className={"font-semibold"}>Opérateur: </span> <span>{transmitter.operator}</span>
+                      <div className={"mt-4"}>
+                        <div><span className={"font-semibold mt-2"}>Id de l'émeteur: </span> <span>{transmitter.id}</span></div>
+                        <div><span className={"font-semibold mt-2"}>Nom: </span> <span>{transmitter.name}</span></div>
+                        <div><span className={"font-semibold mt-2"}>Date de création: </span> <span>{transmitter.creation_date}</span></div>
+                        <div><span className={"font-semibold mt-2"}>Génération: </span> <span>{transmitter.generation}</span></div>
+                        <div><span className={"font-semibold mt-2"}>Opérateur: </span> <span>{transmitter.operator}</span></div>
                       </div>
                     ))
                   }
