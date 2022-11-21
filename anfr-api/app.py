@@ -145,9 +145,8 @@ async def getTransmitter(request: Request, id_antenna: int):
         cur.close()
         conn.close()
         return results
-    except Exception as e:
+    except Exception:
         print("Erreur")
-        print(e)
         return
 
 @app.get("/results/{name}")
