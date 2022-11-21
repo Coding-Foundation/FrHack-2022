@@ -18,7 +18,7 @@ type Props = {
 
 const MainMap: React.FC<Props> = (props) => {
   const {captors} = UseCaptors();
-  const {antennas} = UseAntennas();
+  const {antennas, supportCoords} = UseAntennas();
   const clustersImages = [cluster0Image, cluster1Image, cluster2Image];
   const position = {
     lng: 2.213749,
@@ -50,6 +50,17 @@ const MainMap: React.FC<Props> = (props) => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
+      {
+        supportCoords.map((support) => {
+          return (
+              <Marker
+               position={{lng: support.lng, lat: support.lat}}
+                      icon={antennaIcon}
+              />
+          )
+        })
+      }
+
 
       {
         antennas.map((antenna) => {
@@ -63,13 +74,6 @@ const MainMap: React.FC<Props> = (props) => {
 
           return (
               <>
-            <Marker eventHandlers={{
-              click: () => {
-                props.selectObject(antenna, null)
-              }
-            }} position={{lng: antenna.longitude, lat: antenna.latitude}}
-                    icon={antennaIcon}
-            />
                 <Polygon positions={polyCoords} eventHandlers={{
                   click: () => {
                     props.selectObject(antenna, null)
