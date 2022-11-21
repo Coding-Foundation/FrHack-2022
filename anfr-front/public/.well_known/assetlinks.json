@@ -1,0 +1,8 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target" : {
+    "namespace": "android_app",
+    "package_name": "com.marcpartensky.frhack.twa",
+    "sha256_cert_fingerprints": ["15:7C:20:5D:74:97:48:0C:08:F4:88:6E:50:DA:E6:B5:75:E9:1F:61:84:24:F2:D9:A7:57:14:50:F3:FE:F9:A9"]
+  }
+}]
