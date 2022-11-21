@@ -1,0 +1,1 @@
+Notre application ne traite aucune données utilisateurs.
