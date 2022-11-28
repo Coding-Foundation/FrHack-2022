@@ -5,9 +5,6 @@
 # echo --------
 # echo
 
-env_path=./env
-mkdir -p $env_path
-
 # Helper functions
 random() {
     echo "$RANDOM `date +%s`" | sha256sum | base64 | head -c 32
@@ -52,6 +49,9 @@ then
     read -e -p "- Docker external network name: " -i $network_name network_name
 fi
 export NETWORK_EXTERNAL=$network_external
+
+env_path=./env
+mkdir -p $env_path
 
 # Output to .env
 echo "# $env_path/postgres.env
