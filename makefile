@@ -19,7 +19,8 @@ compose-down:                         ## Remove docker compose containers
 
 setup: credits env build              ## Setup the project
 build: env                            ## Build the project
-	./run.sh docker compose build --pull
+	./run.sh docker compose pull
+	./run.sh docker compose build
 # NETWORK_NAME=$(NETWORK_NAME) env | grep NETWORK_NAME
 env:                                  ## Define the environment variables
 	./init.sh
