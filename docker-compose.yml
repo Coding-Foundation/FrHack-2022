@@ -1,22 +1,22 @@
 version: "3.9"
 services:
-  postgres_frhack:
+  postgres:
     image: postgres:9.6-alpine
     ports:
       - ${POSTGRES_EXPOSED_PORT:-5432}:5432 # custom
     networks:
       - postgres
-    environment: # default values
-      POSTGRES_USER: user
-      POSTGRES_DB: db
-      POSTGRES_PASSWORD: password
+    # environment: # default values
+    #   POSTGRES_USER: user
+    #   POSTGRES_DB: db
+    #   POSTGRES_PASSWORD: password
     env_file:
       - ./env/postgres.env
     command: ["postgres", "-c", "log_statement=all", "-c", "log_destination=stderr"] # log level verbose
     volumes:
-      - postgres_frhack:/var/lib/postgresql/data
+      - postgres:/var/lib/postgresql/data
 
-  lab_frhack:
+  lab:
     image: $REGISTRY/lab-frhack
     build: prep
     volumes:
@@ -28,45 +28,45 @@ services:
     deploy:
       labels:
         traefik.enable: "true"
-        traefik.http.routers.lab_frhack.rule: Host(`lab.$DOMAIN_NAME`)
-        traefik.http.routers.lab_frhack.entrypoints: websecure
-        traefik.http.routers.lab_frhack.tls.certresolver: tls
-        traefik.http.services.lab_frhack.loadbalancer.server.port: 8888
+        traefik.http.routers.lab.rule: Host(`lab.$DOMAIN_NAME`)
+        traefik.http.routers.lab.entrypoints: websecure
+        traefik.http.routers.lab.tls.certresolver: tls
+        traefik.http.services.lab.loadbalancer.server.port: 8888
 
-  pgweb_frhack:
+  pgweb:
     image: sosedoff/pgweb
     restart: unless-stopped
-    environment:
-      DATABASE_URL: postgres://user:password@postgres_frhack:5432/db?sslmode=disable
+    # environment:
+    #   DATABASE_URL: postgres://user:password@postgres:5432/db?sslmode=disable
     env_file:
       - ./env/pgweb.env
     networks:
       - web
       - postgres
     depends_on:
-      - postgres_frhack
+      - postgres
     deploy:
       labels:
         traefik.enable: "true"
-        traefik.http.routers.pgweb_frhack.rule: Host(`db.$DOMAIN_NAME`)
-        traefik.http.routers.pgweb_frhack.entrypoints: websecure
-        traefik.http.routers.pgweb_frhack.tls.certresolver: tls
-        traefik.http.services.pgweb_frhack.loadbalancer.server.port: 8081
+        traefik.http.routers.pgweb.rule: Host(`db.$DOMAIN_NAME`)
+        traefik.http.routers.pgweb.entrypoints: websecure
+        traefik.http.routers.pgweb.tls.certresolver: tls
+        traefik.http.services.pgweb.loadbalancer.server.port: 8081
         # ldapAuth Register Middleware ====================================================
         # traefik.http.routers.pgweb.middlewares: ldap_auth
 
-  api_frhack:
+  api:
     image: $REGISTRY/api-frhack
     build: anfr-api
     networks:
       - web
       - postgres
-    environment:
-      POSTGRES_USER: user
-      POSTGRES_DB: db
-      POSTGRES_PASSWORD: password
-      POSTGRES_PORT: 5432
-      POSTGRES_HOST: postgres_frhack
+    # environment:
+    #   POSTGRES_USER: user
+    #   POSTGRES_DB: db
+    #   POSTGRES_PASSWORD: password
+    #   POSTGRES_PORT: 5432
+    #   POSTGRES_HOST: postgres
     env_file:
       - ./env/api.env
     volumes:
@@ -74,18 +74,18 @@ services:
     deploy:
       labels:
         traefik.enable: "true"
-        traefik.http.routers.api_frhack.rule: Host(`api.$DOMAIN_NAME`)
-        traefik.http.routers.api_frhack.entrypoints: websecure
-        traefik.http.routers.api_frhack.tls.certresolver: tls
-        traefik.http.services.api_frhack.loadbalancer.server.port: 80
+        traefik.http.routers.api.rule: Host(`api.$DOMAIN_NAME`)
+        traefik.http.routers.api.entrypoints: websecure
+        traefik.http.routers.api.tls.certresolver: tls
+        traefik.http.services.api.loadbalancer.server.port: 80
 
-  front_frhack:
+  front:
     image: $REGISTRY/front-frhack
     build: anfr-front
-    environment:
-      API_URL: https://api.frhack.marcpartensky.com
-      NODE_ENV: production
-      PORT: 80
+    # environment:
+    #   API_URL: https://api.frhack.marcpartensky.com
+    #   NODE_ENV: production
+    #   PORT: 80
     env_file:
       - ./env/front.env
     networks:
@@ -93,12 +93,12 @@ services:
     deploy:
       labels:
         traefik.enable: "true"
-        traefik.http.routers.front_frhack.rule: Host(`$DOMAIN_NAME`)
-        traefik.http.routers.front_frhack.entrypoints: websecure
-        traefik.http.routers.front_frhack.tls.certresolver: tls
-        traefik.http.services.front_frhack.loadbalancer.server.port: 80
+        traefik.http.routers.front.rule: Host(`$DOMAIN_NAME`)
+        traefik.http.routers.front.entrypoints: websecure
+        traefik.http.routers.front.tls.certresolver: tls
+        traefik.http.services.front.loadbalancer.server.port: 80
 
-  gitbook_frhack:
+  gitbook:
     image: marcpartensky/gitbook
     restart: unless-stopped
     volumes:
@@ -108,13 +108,13 @@ services:
     deploy:
       labels:
         traefik.enable: "true"
-        traefik.http.routers.gitbook_frhack.rule: Host(`book.$DOMAIN_NAME`)
-        traefik.http.routers.gitbook_frhack.entrypoints: websecure
-        traefik.http.routers.gitbook_frhack.tls.certresolver: tls
-        traefik.http.services.gitbook_frhack.loadbalancer.server.port: 4000
+        traefik.http.routers.gitbook.rule: Host(`book.$DOMAIN_NAME`)
+        traefik.http.routers.gitbook.entrypoints: websecure
+        traefik.http.routers.gitbook.tls.certresolver: tls
+        traefik.http.services.gitbook.loadbalancer.server.port: 4000
 
 volumes:
-  postgres_frhack:
+  postgres:
 
 networks:
   postgres:
