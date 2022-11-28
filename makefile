@@ -8,18 +8,19 @@ help:                                 ## Show this help.
 	@grep -Fh "##" $(MAKEFILE_LIST) | grep -Fv grep | sed -e 's/\\$$//' | sed -e 's/##//'
 
 compose: setup                        ## Run with docker compose
-	docker-compose up -d
+	docker-compose up -d --force-recreate
 swarm: setup                          ## Run with docker swarm
 	$(call setup_env,docker-compose)
 	docker stack deploy -c docker-compose.yml $(STACK_NAME)
 
+rm-stack:                             ## Clear the swarm stack
+	docker stack rm $(STACK_NAME)
+compose-down:                         ## Remove docker compose containers with its volumes
+	docker-compose down -v
+
 setup: credits env build              ## Setup all the project
 build: env                            ## Build the project
 	docker-compose build
-
-rm-stack:                             ## Clear the swarm stack
-	docker stack rm $(STACK_NAME)
-
 env:                                  ## Define the environment variables
 	./init.sh
 clear:                                ## Clear the environment variables
