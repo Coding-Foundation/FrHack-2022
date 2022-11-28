@@ -18,7 +18,7 @@ rm-stack:                             ## Clear the swarm stack
 compose-down:                         ## Remove docker compose containers with its volumes
 	docker-compose down -v
 
-setup: credits env build              ## Setup all the project
+setup: credits env build              ## Setup the project
 build: env                            ## Build the project
 	docker-compose build
 env:                                  ## Define the environment variables
