@@ -82,7 +82,7 @@ DATABASE_URL=postgres://$postgres_user:$postgres_password@$postgres_host:$postgr
 
 echo "# $env_path/front.env
 NODE_ENV=$node_env
-FRONT_PORT=80
+PORT=80
 API_URL=api.$domain_name
 " > $env_path/front.env
 
