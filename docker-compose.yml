@@ -133,7 +133,7 @@ services:
     networks:
       - web
     volumes:
-      - ../traefik.yml:/traefik.yml # static configuration
+      - ./traefik.yml:/traefik.yml # static configuration
       - traefik:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock:ro
     labels:
