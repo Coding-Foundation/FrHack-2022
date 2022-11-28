@@ -26,7 +26,7 @@ env:                                  ## Define the environment variables
 rm-env:                               ## Remove the environment variables
 	rm -rf ./env
 rm-volume:                            ## Remove docker compose volumes
-	./run.sh docker volume rm $(STACK_NAME)_postgres_frhack || true
+	./run.sh docker volume rm $(STACK_NAME)_postgres || true
 clear: rm-env rm-volume
 reset: clear env                     ## Reset the environment variables
 
