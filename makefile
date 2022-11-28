@@ -27,7 +27,8 @@ rm-env:                               ## Remove the environment variables
 	rm -rf ./env
 rm-volume:                            ## Remove docker compose volumes
 	./run.sh docker volume rm $(STACK_NAME)_postgres_frhack
-reset: rm-env env                     ## Reset the environment variables
+clear: rm-env rm-volume
+reset: clear env                     ## Reset the environment variables
 
 lab:                                  ## Run the jupyter lab without docker
 	jupyter-lab --ip 0.0.0.0 --collaborative --allow-root
