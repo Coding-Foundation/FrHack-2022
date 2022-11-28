@@ -41,10 +41,17 @@ read -e -p "- PostgreSQL database name: " -i $postgres_db postgres_db
 read -e -p "- Node env: " -i $node_env node_env
 read -e -p "- Docker registry: " -i $registry registry
 read -e -p "- Docker external network: " -i $network_external network_external
-if $network_external
+if [ $network_external = "true" ]
+then
+    network_external=true
+else
+    network_external=false
+fi
+if [ $network_external ]
 then
     read -e -p "- Docker external network name: " -i $network_name network_name
 fi
+export NETWORK_EXTERNAL=$network_external
 
 # Output to .env
 echo "# $env_path/postgres.env
@@ -76,7 +83,7 @@ REGISTRY=$registry
 DOMAIN_NAME=$domain_name
 POSTGRES_EXPOSED_PORT=$postgres_exposed_port
 NETWORK_NAME=$network_name
-NETWORK_EXTENAL=$network_external
+NETWORK_EXTERNAL=$network_external
 " > $env_path/docker-compose.env
 
 # Display

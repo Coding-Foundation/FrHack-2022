@@ -17,7 +17,7 @@ services:
       - postgres_frhack:/var/lib/postgresql/data
 
   lab_frhack:
-    image: $$REGISTRY/lab-frhack
+    image: ${REGISTRY}/lab-frhack
     build: prep
     volumes:
       - ./clustering.ipynb:/opt/lab/clustering.ipynb
@@ -56,7 +56,7 @@ services:
         # traefik.http.routers.pgweb.middlewares: ldap_auth
 
   api_frhack:
-    image: $$REGISTRY/api-frhack
+    image: ${REGISTRY}/api-frhack
     build: anfr-api
     networks:
       - web
@@ -80,7 +80,7 @@ services:
         traefik.http.services.api_frhack.loadbalancer.server.port: 80
 
   front_frhack:
-    image: $$REGISTRY/front-frhack
+    image: ${REGISTRY}/front-frhack
     build: anfr-front
     environment:
       API_URL: https://api.frhack.marcpartensky.com
@@ -104,7 +104,7 @@ services:
     volumes:
       - ./README.md:/opt/gitbook/book/README.md
     networks:
-      - caddy
+      - web
     deploy:
       labels:
         traefik.enable: "true"
@@ -120,4 +120,4 @@ networks:
   postgres:
   web:
     name: $$NETWORK_NAME
-    external: $NETWORK_EXTERNAL
+    external: ${NETWORK_EXTERNAL:-false}
