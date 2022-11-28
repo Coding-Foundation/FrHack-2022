@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # Credits
 # echo "Credits to : Marc Partensky, Alexandre Bigot et Étienne Favière"
