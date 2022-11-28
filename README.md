@@ -46,7 +46,8 @@ make help
 ```
 
 ## Example on debian
-<script src="https://asciinema.org/a/1SIpWzPhlbn7E2dVJmDhXtkZN.js" id="asciicast-1SIpWzPhlbn7E2dVJmDhXtkZN" async></script>
+![Demo](./demo.svg)
+
 ```sh
 sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y
 sudo apt install -y make docker-ce docker-ce-cli containerd.io docker-compose-plugin
