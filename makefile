@@ -10,7 +10,7 @@ help:                                 ## Show this help.
 compose: setup                        ## Run with docker compose
 	./run.sh docker compose up -d --force-recreate
 swarm: setup                          ## Run with docker swarm
-	./run.sh docker stack deploy -c docker-compose.yml $(STACK_NAME)
+	./run.sh docker stack deploy -c stack.yml $(STACK_NAME)
 
 rm-stack:                             ## Clear the swarm stack
 	./run.sh docker stack rm $(STACK_NAME)

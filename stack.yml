@@ -33,12 +33,13 @@ services:
     networks:
       - web
       - postgres
-    labels:
-      traefik.enable: "true"
-      traefik.http.routers.lab.rule: Host(`lab.$DOMAIN_NAME`)
-      traefik.http.routers.lab.entrypoints: websecure
-      traefik.http.routers.lab.tls.certresolver: tls
-      traefik.http.services.lab.loadbalancer.server.port: 8888
+    deploy:
+      labels:
+        traefik.enable: "true"
+        traefik.http.routers.lab.rule: Host(`lab.$DOMAIN_NAME`)
+        traefik.http.routers.lab.entrypoints: websecure
+        traefik.http.routers.lab.tls.certresolver: tls
+        traefik.http.services.lab.loadbalancer.server.port: 8888
 
   pgweb:
     image: sosedoff/pgweb
@@ -52,14 +53,15 @@ services:
       - postgres
     depends_on:
       - postgres
-    labels:
-      traefik.enable: "true"
-      traefik.http.routers.pgweb.rule: Host(`db.$DOMAIN_NAME`)
-      traefik.http.routers.pgweb.entrypoints: websecure
-      traefik.http.routers.pgweb.tls.certresolver: tls
-      traefik.http.services.pgweb.loadbalancer.server.port: 8081
-      # ldapAuth Register Middleware ====================================================
-      # traefik.http.routers.pgweb.middlewares: ldap_auth
+    deploy:
+      labels:
+        traefik.enable: "true"
+        traefik.http.routers.pgweb.rule: Host(`db.$DOMAIN_NAME`)
+        traefik.http.routers.pgweb.entrypoints: websecure
+        traefik.http.routers.pgweb.tls.certresolver: tls
+        traefik.http.services.pgweb.loadbalancer.server.port: 8081
+        # ldapAuth Register Middleware ====================================================
+        # traefik.http.routers.pgweb.middlewares: ldap_auth
 
   api:
     image: $REGISTRY/api-frhack
@@ -77,12 +79,13 @@ services:
       - ./env/api.env
     volumes:
       - ./prep:/opt/anfr/prep
-    labels:
-      traefik.enable: "true"
-      traefik.http.routers.api.rule: Host(`api.$DOMAIN_NAME`)
-      traefik.http.routers.api.entrypoints: websecure
-      traefik.http.routers.api.tls.certresolver: tls
-      traefik.http.services.api.loadbalancer.server.port: 80
+    deploy:
+      labels:
+        traefik.enable: "true"
+        traefik.http.routers.api.rule: Host(`api.$DOMAIN_NAME`)
+        traefik.http.routers.api.entrypoints: websecure
+        traefik.http.routers.api.tls.certresolver: tls
+        traefik.http.services.api.loadbalancer.server.port: 80
 
   front:
     image: $REGISTRY/front-frhack
@@ -95,12 +98,13 @@ services:
       - ./env/front.env
     networks:
       - web
-    labels:
-      traefik.enable: "true"
-      traefik.http.routers.front.rule: Host(`$DOMAIN_NAME`)
-      traefik.http.routers.front.entrypoints: websecure
-      traefik.http.routers.front.tls.certresolver: tls
-      traefik.http.services.front.loadbalancer.server.port: 80
+    deploy:
+      labels:
+        traefik.enable: "true"
+        traefik.http.routers.front.rule: Host(`$DOMAIN_NAME`)
+        traefik.http.routers.front.entrypoints: websecure
+        traefik.http.routers.front.tls.certresolver: tls
+        traefik.http.services.front.loadbalancer.server.port: 80
 
   gitbook:
     image: marcpartensky/gitbook
@@ -109,12 +113,13 @@ services:
       - ./README.md:/opt/gitbook/book/README.md
     networks:
       - web
-    labels:
-      traefik.enable: "true"
-      traefik.http.routers.gitbook.rule: Host(`book.$DOMAIN_NAME`)
-      traefik.http.routers.gitbook.entrypoints: websecure
-      traefik.http.routers.gitbook.tls.certresolver: tls
-      traefik.http.services.gitbook.loadbalancer.server.port: 4000
+    deploy:
+      labels:
+        traefik.enable: "true"
+        traefik.http.routers.gitbook.rule: Host(`book.$DOMAIN_NAME`)
+        traefik.http.routers.gitbook.entrypoints: websecure
+        traefik.http.routers.gitbook.tls.certresolver: tls
+        traefik.http.services.gitbook.loadbalancer.server.port: 4000
 
 volumes:
   postgres:
