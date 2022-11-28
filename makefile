@@ -2,36 +2,35 @@
 
 STACK_NAME=frhack
 
-credits:
-	@echo ---------------------------------------------------------------
-	@echo Credits to : Marc Partensky, Alexandre Bigot et Étienne Favière
-	@echo ---------------------------------------------------------------
-	@echo 
+help:                                 ## show this help.
+	@echo Makefile helper:
+	@echo ----------------
+	@grep -Fh "##" $(MAKEFILE_LIST) | grep -Fv grep | sed -e 's/\\$$//' | sed -e 's/##//'
 
-compose: setup
+compose: setup                        ## run with docker compose
 	docker-compose up -d
-swarm: setup
+swarm: setup                          ## run with docker swarm
 	$(call setup_env,docker-compose)
 	docker stack deploy -c docker-compose.yml $(STACK_NAME)
 
-setup: credits env build
-build: env
+setup: credits env build              ## setup all the project
+build: env                            ## build the project
 	docker-compose build
 
-rm-stack:
+rm-stack:                             ## clear the swarm stack
 	docker stack rm $(STACK_NAME)
 
-env:
+env:                                  ## define environment variables
 	./init.sh
-clear:
+clear:                                ## clear environment variables
 	rm -rf ./env
-reset: clear env
+reset: clear env                      ## reset envrionment variables
 
-lab:
+lab:                                  ## run jupyter lab without docker
 	jupyter-lab --ip 0.0.0.0 --collaborative --allow-root
-front: anfr-front/node_modules
+front: anfr-front/node_modules        ## run front without docker
 	npm --prefix anfr-front start
-anfr-front/node_modules:
+anfr-front/node_modules:              ## install front dependencies without docker
 	npm --prefix anfr-front install
 
 # helper
@@ -41,4 +40,10 @@ define setup_env
 	$(eval include env/$(1).env)
 	$(eval export sed 's/=.*//' env/$(1).env)
 endef
+
+credits:                              ## show credits
+	@echo ---------------------------------------------------------------
+	@echo Credits to : Marc Partensky, Alexandre Bigot et Étienne Favière
+	@echo ---------------------------------------------------------------
+	@echo 
 
