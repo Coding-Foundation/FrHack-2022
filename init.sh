@@ -27,18 +27,24 @@ postgres_port=5432
 registry=marcpartensky
 node_env=production
 front_port=80
-public_postgres_port=5432
+postgres_exposed_port=5432
 network_name=web
+network_external=false
 
 # Prompt
+echo "Let the default value if you don't know"
 read -e -p "- Domain name: " -i $domain_name domain_name
-read -e -p "- PostgreSQL public port: " -i $public_postgres_port public_postgres_port
+read -e -p "- PostgreSQL exposed port: " -i $postgres_exposed_port postgres_exposed_port
 read -e -p "- PostgreSQL username: " -i $postgres_user postgres_user
 read -e -p "- PostgreSQL password: " -i $postgres_password postgres_password
 read -e -p "- PostgreSQL database name: " -i $postgres_db postgres_db
 read -e -p "- Node env: " -i $node_env node_env
 read -e -p "- Docker registry: " -i $registry registry
-read -e -p "- Docker external network name: " -i $network_name network_name
+read -e -p "- Docker external network: " -i $network_external network_external
+if $network_external
+then
+    read -e -p "- Docker external network name: " -i $network_name network_name
+fi
 
 # Output to .env
 echo "# $env_path/postgres.env
@@ -68,8 +74,9 @@ API_URL=api.$domain_name
 echo "# $env_path/docker-compose.env
 REGISTRY=$registry
 DOMAIN_NAME=$domain_name
-PUBLIC_POSTGRES_PORT=$public_postgres_port
+POSTGRES_EXPOSED_PORT=$postgres_exposed_port
 NETWORK_NAME=$network_name
+NETWORK_EXTENAL=$network_external
 " > $env_path/docker-compose.env
 
 # Display

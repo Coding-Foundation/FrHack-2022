@@ -3,7 +3,7 @@ services:
   postgres_frhack:
     image: postgres:9.6-alpine
     ports:
-      - ${PUBLIC_POSTGRES_PORT:-5432}:5432 # custom
+      - ${POSTGRES_EXPOSED_PORT:-5432}:5432 # custom
     networks:
       - postgres
     environment: # default values
@@ -120,4 +120,4 @@ networks:
   postgres:
   web:
     name: $$NETWORK_NAME
-    external: true
+    external: $NETWORK_EXTERNAL
