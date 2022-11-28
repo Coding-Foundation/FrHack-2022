@@ -44,14 +44,3 @@ make swarm
 # print help
 make help
 ```
-
-## Example on debian
-```sh
-sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y
-sudo apt install -y make docker-ce docker-ce-cli containerd.io docker-compose-plugin 
-sudo usermod -aG docker $USER
-git clone https://github.com/coding-foundation/frhack-2022 frhack
-cd frhack
-docker swarm init
-make swarm
-```
