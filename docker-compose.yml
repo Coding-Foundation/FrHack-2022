@@ -3,30 +3,32 @@ services:
   postgres_frhack:
     image: postgres:9.6-alpine
     ports:
-      - "5433:5432"
+      - ${PUBLIC_POSTGRES_PORT:-5432}:5432 # custom
     networks:
       - postgres
-    environment:
+    environment: # default values
       POSTGRES_USER: user
       POSTGRES_DB: db
       POSTGRES_PASSWORD: password
-    command: ["postgres", "-c", "log_statement=all", "-c", "log_destination=stderr"]
+    env_file:
+      - ./env/postgres.env
+    command: ["postgres", "-c", "log_statement=all", "-c", "log_destination=stderr"] # log level verbose
     volumes:
       - postgres_frhack:/var/lib/postgresql/data
 
   lab_frhack:
-    image: marcpartensky/lab-frhack
+    image: $$REGISTRY/lab-frhack
     build: prep
     volumes:
       - ./clustering.ipynb:/opt/lab/clustering.ipynb
       - ./prep:/opt/lab/prep
     networks:
-      - caddy
+      - web
       - postgres
     deploy:
       labels:
         traefik.enable: "true"
-        traefik.http.routers.lab_frhack.rule: Host(`lab.frhack.marcpartensky.com`)
+        traefik.http.routers.lab_frhack.rule: Host(`lab.$$DOMAIN_NAME`)
         traefik.http.routers.lab_frhack.entrypoints: websecure
         traefik.http.routers.lab_frhack.tls.certresolver: tls
         traefik.http.services.lab_frhack.loadbalancer.server.port: 8888
@@ -36,15 +38,17 @@ services:
     restart: unless-stopped
     environment:
       DATABASE_URL: postgres://user:password@postgres_frhack:5432/db?sslmode=disable
+    env_file:
+      - ./env/pgweb.env
     networks:
+      - web
       - postgres
-      - caddy
     depends_on:
       - postgres_frhack
     deploy:
       labels:
         traefik.enable: "true"
-        traefik.http.routers.pgweb_frhack.rule: Host(`db.frhack.marcpartensky.com`)
+        traefik.http.routers.pgweb_frhack.rule: Host(`db.$$DOMAIN_NAME`)
         traefik.http.routers.pgweb_frhack.entrypoints: websecure
         traefik.http.routers.pgweb_frhack.tls.certresolver: tls
         traefik.http.services.pgweb_frhack.loadbalancer.server.port: 8081
@@ -52,40 +56,44 @@ services:
         # traefik.http.routers.pgweb.middlewares: ldap_auth
 
   api_frhack:
-    image: marcpartensky/api-frhack
+    image: $$REGISTRY/api-frhack
     build: anfr-api
     networks:
+      - web
       - postgres
-      - caddy
     environment:
       POSTGRES_USER: user
       POSTGRES_DB: db
       POSTGRES_PASSWORD: password
       POSTGRES_PORT: 5432
       POSTGRES_HOST: postgres_frhack
+    env_file:
+      - ./env/api.env
     volumes:
       - ./prep:/opt/anfr/prep
     deploy:
       labels:
         traefik.enable: "true"
-        traefik.http.routers.api_frhack.rule: Host(`api.frhack.marcpartensky.com`)
+        traefik.http.routers.api_frhack.rule: Host(`api.$$DOMAIN_NAME`)
         traefik.http.routers.api_frhack.entrypoints: websecure
         traefik.http.routers.api_frhack.tls.certresolver: tls
         traefik.http.services.api_frhack.loadbalancer.server.port: 80
 
   front_frhack:
-    image: marcpartensky/front-frhack
+    image: $$REGISTRY/front-frhack
     build: anfr-front
     environment:
       API_URL: https://api.frhack.marcpartensky.com
       NODE_ENV: production
       PORT: 80
+    env_file:
+      - ./env/front.env
     networks:
-      - caddy
+      - web
     deploy:
       labels:
         traefik.enable: "true"
-        traefik.http.routers.front_frhack.rule: Host(`frhack.marcpartensky.com`)
+        traefik.http.routers.front_frhack.rule: Host(`$$DOMAIN_NAME}`)
         traefik.http.routers.front_frhack.entrypoints: websecure
         traefik.http.routers.front_frhack.tls.certresolver: tls
         traefik.http.services.front_frhack.loadbalancer.server.port: 80
@@ -100,7 +108,7 @@ services:
     deploy:
       labels:
         traefik.enable: "true"
-        traefik.http.routers.gitbook_frhack.rule: Host(`book.frhack.marcpartensky.com`)
+        traefik.http.routers.gitbook_frhack.rule: Host(`book.$$DOMAIN_NAME`)
         traefik.http.routers.gitbook_frhack.entrypoints: websecure
         traefik.http.routers.gitbook_frhack.tls.certresolver: tls
         traefik.http.services.gitbook_frhack.loadbalancer.server.port: 4000
@@ -110,5 +118,6 @@ volumes:
 
 networks:
   postgres:
-  caddy:
+  web:
+    name: $$NETWORK_NAME
     external: true
