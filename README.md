@@ -20,10 +20,27 @@
 
 [Doosier Drive](https://drive.google.com/drive/folders/1V1yPBnZ0Bl0FzPhE1QPR9QVA9O73dmBE?usp=sharing)
 
-Limite de 6 Volt / mètre
+# Deployment
+## Prerequisites:
+- make
+- docker
+- docker-compose
+- docker swarm (optional)
 
-Influence de la 5G sur lélévation de la moyenne de 6Volt/mètre ?
+## Commands
+```sh
+# clone the project
+git clone https://github.com/coding-foundation/frhack-2022 frhack
+cd frhack
+```
 
-2100MHz => beaucoup de désinstallation
+```sh
+# run with docker compose
+make compose
 
-D'autres données dispo en open data
+# run with docker swarm
+make swarm
+
+# print help
+make help
+```
