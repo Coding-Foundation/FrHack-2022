@@ -17,9 +17,10 @@ rm-stack:                             ## Clear the swarm stack
 compose-down:                         ## Remove docker compose containers
 	./run.sh docker compose down -v
 
-setup: credits env build              ## Setup the project
-build: env                            ## Build the project
+setup: credits env pull               ## Setup the project
+pull: env                             ## Pull the project
 	./run.sh docker compose pull
+build: env                            ## Build the project
 	./run.sh docker compose build
 # NETWORK_NAME=$(NETWORK_NAME) env | grep NETWORK_NAME
 env:                                  ## Define the environment variables
@@ -29,7 +30,7 @@ rm-env:                               ## Remove the environment variables
 rm-volume:                            ## Remove docker compose volumes
 	./run.sh docker volume rm $(STACK_NAME)_postgres || true
 clear: rm-env rm-volume
-reset: clear env                     ## Reset the environment variables
+reset: clear env                      ## Reset the environment variables
 
 lab:                                  ## Run the jupyter lab without docker
 	jupyter-lab --ip 0.0.0.0 --collaborative --allow-root
