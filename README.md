@@ -46,6 +46,7 @@ make help
 ```
 
 ## Example on debian
+[![asciicast](https://asciinema.org/a/1SIpWzPhlbn7E2dVJmDhXtkZN)](https://asciinema.org/a/1SIpWzPhlbn7E2dVJmDhXtkZN)
 ```sh
 sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y
 sudo apt install -y make docker-ce docker-ce-cli containerd.io docker-compose-plugin
