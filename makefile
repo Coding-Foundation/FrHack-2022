@@ -38,7 +38,7 @@ anfr-front/node_modules:              ## Install the front dependencies without 
 
 credits:                              ## Show the credits
 	@echo ---------------------------------------------------------------
-	@echo Credits to : Marc Partensky, Alexandre Bigot et Étienne Favière
+	@echo Credits to : Marc Partensky, Alexandre Bigot and Étienne Favière
 	@echo ---------------------------------------------------------------
 	@echo 
 
