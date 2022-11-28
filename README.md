@@ -3,7 +3,7 @@
 # FrHack 2022
 
 ## Playstore
-[![FR Hack App](https://play.google.com/store/apps/details?id=com.marcpartensky.frhack.twa)](https://www.fcsok.org/wp-content/uploads/2020/04/get-it-on-google-play-badge.png)
+[![FR Hack App](https://www.fcsok.org/wp-content/uploads/2020/04/get-it-on-google-play-badge.png)](https://www.fcsok.org/wp-content/uploads/2020/04/get-it-on-google-play-badge.png)
 
 ## Front
 [![FR Hack](https://cdn.discordapp.com/attachments/703994640977756200/1043734855554433044/image.png)](https://frhack.marcpartensky.com)
