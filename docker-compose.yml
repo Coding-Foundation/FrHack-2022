@@ -120,4 +120,4 @@ networks:
   postgres:
   web:
     name: $$NETWORK_NAME
-    external: ${NETWORK_EXTERNAL:-false}
+    external: $$NETWORK_EXTERNAL
