@@ -53,5 +53,6 @@ sudo usermod -aG docker $USER
 git clone https://github.com/coding-foundation/frhack-2022 frhack
 cd frhack
 docker swarm init
+docker network create --driver=overlay web
 make swarm
 ```
