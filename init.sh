@@ -68,6 +68,14 @@ POSTGRES_PORT=$postgres_port
 POSTGRES_HOST=$postgres_host
 " > $env_path/api.env
 
+echo "# $env_path/lab.env
+POSTGRES_USER=$postgres_user
+POSTGRES_DB=$postgres_db
+POSTGRES_PASSWORD=$postgres_password
+POSTGRES_PORT=$postgres_port
+POSTGRES_HOST=$postgres_host
+" > $env_path/lab.env
+
 echo "# $env_path/pgweb.env
 DATABASE_URL=postgres://$postgres_user:$postgres_password@$postgres_host:$postgres_port/$postgres_db?sslmode=disable
 " > $env_path/pgweb.env

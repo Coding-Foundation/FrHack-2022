@@ -22,6 +22,14 @@ services:
     volumes:
       - ./clustering.ipynb:/opt/lab/clustering.ipynb
       - ./prep:/opt/lab/prep
+    # environment:
+    #   POSTGRES_USER: user
+    #   POSTGRES_DB: db
+    #   POSTGRES_PASSWORD: password
+    #   POSTGRES_PORT: 5432
+    #   POSTGRES_HOST: postgres
+    env_file:
+      - ./env/lab.env
     networks:
       - web
       - postgres
