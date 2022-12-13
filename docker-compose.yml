@@ -47,7 +47,7 @@ services:
         traefik.http.routers.lab.tls.certresolver: tls
         traefik.http.services.lab.loadbalancer.server.port: 8888
 
-  pgweb:
+  pgwebui:
     image: sosedoff/pgweb
     restart: unless-stopped
     # environment:
@@ -61,17 +61,17 @@ services:
       - postgres
     labels:
       traefik.enable: "true"
-      traefik.http.routers.pgweb.rule: Host(`db.$DOMAIN_NAME`)
-      traefik.http.routers.pgweb.entrypoints: websecure
-      traefik.http.routers.pgweb.tls.certresolver: tls
-      traefik.http.services.pgweb.loadbalancer.server.port: 8081
+      traefik.http.routers.pgwebui.rule: Host(`db.$DOMAIN_NAME`)
+      traefik.http.routers.pgwebui.entrypoints: websecure
+      traefik.http.routers.pgwebui.tls.certresolver: tls
+      traefik.http.services.pgwebui.loadbalancer.server.port: 8081
     deploy:
       labels:
         traefik.enable: "true"
-        traefik.http.routers.pgweb.rule: Host(`db.$DOMAIN_NAME`)
-        traefik.http.routers.pgweb.entrypoints: websecure
-        traefik.http.routers.pgweb.tls.certresolver: tls
-        traefik.http.services.pgweb.loadbalancer.server.port: 8081
+        traefik.http.routers.pgwebui.rule: Host(`db.$DOMAIN_NAME`)
+        traefik.http.routers.pgwebui.entrypoints: websecure
+        traefik.http.routers.pgwebui.tls.certresolver: tls
+        traefik.http.services.pgwebui.loadbalancer.server.port: 8081
         # ldapAuth Register Middleware ====================================================
         # traefik.http.routers.pgweb.middlewares: ldap_auth
 
